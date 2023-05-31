@@ -1,0 +1,77 @@
+{
+  "name": "streamr-filetransfer-cli",
+  "version": "0.0.0",
+  "description": "Streamr filetransfer CLI",
+  "author": "Jarno @yaruno",
+  "bin": {
+    "streamr-filetransfer-cli": "./bin/run"
+  },
+  "homepage": "https://github.com/yaruno/streamr-filetransfer-cli",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": "yaruno/streamr-filetransfer-cli",
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "dependencies": {
+    "@oclif/core": "^2",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.4.7",
+    "streamr-client": "^8.5.2"
+  },
+  "devDependencies": {
+    "@oclif/test": "^2.3.20",
+    "@types/chai": "^4",
+    "@types/jszip": "^3.4.1",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.18.31",
+    "@types/node-fetch": "^2.6.4",
+    "@types/websocket": "^1.0.5",
+    "@types/ws": "^8.5.4",
+    "chai": "^4",
+    "eslint": "^7.32.0",
+    "eslint-config-oclif": "^4",
+    "eslint-config-oclif-typescript": "^1.0.3",
+    "mocha": "^9",
+    "oclif": "^3",
+    "shx": "^0.3.3",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.5.2",
+    "typescript": "^4.9.5"
+  },
+  "oclif": {
+    "bin": "streamr-filetransfer-cli",
+    "dirname": "streamr-filetransfer-cli",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "hello": {
+        "description": "Say hello to the world and others"
+      }
+    }
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\" --exit",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/yaruno/streamr-filetransfer-cli/issues",
+  "keywords": [
+    "oclif"
+  ],
+  "types": "dist/index.d.ts"
+}
