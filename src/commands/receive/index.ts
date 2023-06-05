@@ -3,7 +3,7 @@ import {Args, Command, Flags, ux} from '@oclif/core'
 import {StreamrClient} from 'streamr-client'
 import {calculateFileMD5, appendToFile, base64ToUint8Array, waitAWhile} from '../../utils/utils'
 
-const WAIT_TIME_BETWEEN_CHUNKS = 1
+const WAIT_TIME_BETWEEN_CHUNKS = 0
 const CHUNK_SIZE_IN_KB = 45
 
 export default class Receive extends Command {
@@ -50,7 +50,6 @@ export default class Receive extends Command {
         hideCursor: true,
       })
       const waitTimeBetweenChunks = flags.wait ? flags.wait : WAIT_TIME_BETWEEN_CHUNKS
-
       await streamrCli.subscribe({
         id: flags.stream,
       }, async (msg:any) => {
@@ -81,20 +80,25 @@ export default class Receive extends Command {
           await waitAWhile(waitTimeBetweenChunks)
 
           if (fileChunks[msg.b[2]] !== undefined && fileChunks[msg.b[2]].length === msg.b[4] + 1) {
-            console.log('probably got all chunks')
-            console.log('assuming chunks are in order')
-            console.log('file saved at ' + filepath)
+            simpleBar.update(msg.b[4] + 1, {
+              speed: avgSpeed + ' KB/s',
+              time: timeLapsed + ' s',
+            })
+            await waitAWhile(100)
+            console.log('\nprobably got all chunks')
+            console.log('\nassuming chunks are in order')
+            console.log('\nfile saved at ' + filepath)
             const md5 = await calculateFileMD5(filepath)
             const receivedMd5Hash = msg.b[7]
-            console.log('md5 hash: ' + md5)
+            console.log('\nmd5 hash: ' + md5)
             if (md5 === receivedMd5Hash) {
-              console.log('\nmd5 hash match! File is OK\n')
+              console.log('\nmd5 hash match! File is OK')
             } else {
-              console.log('\nmd5 hashes do not match! File may be corrupted!\n')
+              console.log('\nmd5 hashes do not match! File may be corrupted!')
             }
 
             // eslint-disable-next-line no-process-exit, unicorn/no-process-exit
-            process.exit()
+            // process.exit()
           }
         } catch (error) {
           console.log(error)

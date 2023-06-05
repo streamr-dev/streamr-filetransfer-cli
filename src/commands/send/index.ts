@@ -76,7 +76,7 @@ export default class Send extends Command {
         const payload = JSON.parse(JSON.stringify(base64Slice))
         const msg = {
           b: [
-            deviceId, payload, messageId, chunkCounter, totalSlices - 1, fileSizeStats.size, fileName, md5,
+            deviceId, payload, messageId, chunkCounter, totalSlices - 1, fileSizeStats.size, messageId + '_' + fileName, md5,
           ],
         }
         try {
@@ -99,7 +99,7 @@ export default class Send extends Command {
           // start sending slow, helps to signal that file transfer has started
           // change wait time once enough chunks have passed
           if (chunkCounter < 200) {
-            waitTimeBetweenChunks = 50
+            waitTimeBetweenChunks = 250
           } else {
             waitTimeBetweenChunks = flags.wait ? flags.wait : WAIT_TIME_BETWEEN_CHUNKS
           }
