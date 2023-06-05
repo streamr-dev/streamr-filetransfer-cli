@@ -98,7 +98,7 @@ export default class Send extends Command {
 
           // start sending slow, helps to signal that file transfer has started
           // change wait time once enough chunks have passed
-          if (chunkCounter < 200) {
+          if (chunkCounter < 300) {
             waitTimeBetweenChunks = 250
           } else {
             waitTimeBetweenChunks = flags.wait ? flags.wait : WAIT_TIME_BETWEEN_CHUNKS
