@@ -20,6 +20,7 @@
     "@oclif/core": "^2",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.4.7",
+    "cli-progress": "^3.12.0",
     "streamr-client": "^8.5.2"
   },
   "devDependencies": {
@@ -47,13 +48,15 @@
     "dirname": "streamr-filetransfer-cli",
     "commands": "./dist/commands",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-help"
     ],
     "topicSeparator": " ",
     "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
+      "send": {
+        "description": "Send a file over Streamr stream"
+      },
+      "receive": {
+        "description": "Receive a file from Streamr stream"
       }
     }
   },
