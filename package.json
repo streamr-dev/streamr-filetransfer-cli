@@ -1,6 +1,6 @@
 {
   "name": "streamr-filetransfer-cli",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Streamr filetransfer CLI",
   "author": "Jarno @yaruno",
   "bin": {

@@ -97,7 +97,6 @@ export default class Receive extends Command {
             } else {
               console.log('\nmd5 hashes do not match! File may be corrupted!')
             }
-
           }
         } catch (error) {
           console.log(error)
