@@ -39,7 +39,6 @@ export default class Send extends Command {
       this.log(`filepath: ${args.filepath} privatekey: ${flags.privatekey} stream: ${flags.stream} wait: ${flags.wait}`)
 
       const streamrCli = new StreamrClient({
-        logLevel: 'debug',
         auth: {
           privateKey: flags.privatekey,
         },
