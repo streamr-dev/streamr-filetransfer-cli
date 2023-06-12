@@ -17,7 +17,7 @@ $ npm install -g streamr-filetransfer-cli
 $ streamr-filetransfer-cli COMMAND
 running command...
 $ streamr-filetransfer-cli (--version)
-streamr-filetransfer-cli/0.0.0 win32-x64 node-v16.20.0
+streamr-filetransfer-cli/0.0.1 win32-x64 node-v16.20.0
 $ streamr-filetransfer-cli --help [COMMAND]
 USAGE
   $ streamr-filetransfer-cli COMMAND
@@ -52,7 +52,7 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.9
 
 ## `streamr-filetransfer-cli receive [FILEPATH]`
 
-Streamr file transfer
+Streamr file transfer receive command. To exit receive mode use CTRL+C (win/mac) or Command+C (osx).
 
 ```
 USAGE
@@ -68,17 +68,17 @@ FLAGS
   -w, --wait=<value>        Wait time between receiving chunks in milliseconds
 
 DESCRIPTION
-  Streamr file transfer
+  Streamr file transfer receive command. To exit receive mode use CTRL+C (win/mac) or Command+C (osx).
 
 EXAMPLES
   $ streamr-filetransfer-cli receive -p<FOLDER> -k<0xPRIVATEKEY> -s<STREAM_ID>
 ```
 
-_See code: [dist/commands/receive/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.0/dist/commands/receive/index.ts)_
+_See code: [dist/commands/receive/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.1/dist/commands/receive/index.ts)_
 
 ## `streamr-filetransfer-cli send FILEPATH`
 
-Streamr file transfer
+Streamr file transfer send command.
 
 ```
 USAGE
@@ -94,11 +94,11 @@ FLAGS
   -w, --wait=<value>           Wait time between sending chunks in milliseconds
 
 DESCRIPTION
-  Streamr file transfer
+  Streamr file transfer send command.
 
 EXAMPLES
   $ streamr-filetransfer-cli send <FILE_PATH> -k<0xPRIVATEKEY> -s<STREAM_ID>
 ```
 
-_See code: [dist/commands/send/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.0/dist/commands/send/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.1/dist/commands/send/index.ts)_
 <!-- commandsstop -->
