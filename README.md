@@ -3,8 +3,8 @@ streamr-file-transfer-cli
 
 Streamr file transfer command line interface. Transfer files over Streamr network.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![GitHub license](https://img.shields.io/github/license/streamr-dev/streamr-filetransfer-cli)](https://github.com/streamr-dev/streamr-filetransfer-cli/blob/main/LICENSE)
 
 <!-- toc -->
 * [Usage](#usage)
