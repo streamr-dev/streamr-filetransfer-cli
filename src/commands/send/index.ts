@@ -6,10 +6,11 @@ import path from 'node:path'
 import {calculateFileMD5, arrayBufferToBase64, generateUniqueId, waitAWhile} from '../../utils/utils'
 
 const WAIT_TIME_BETWEEN_CHUNKS = 40
-const BYTES_PER_SLICE = 45
+const KILOBYTES_PER_SLICE = 300 // 560
+const WEBRTC_MAX_MESSAGE_SIZE = 1048576 // 1 Megabyte
 
 export default class Send extends Command {
-    static description = 'Streamr file transfer'
+    static description = 'Streamr file transfer send command.'
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     async sendToStream(streamrCli: any, stream: string, msg: any): Promise<void> {
@@ -35,14 +36,15 @@ export default class Send extends Command {
       const deviceId = generateUniqueId()
       const messageId = generateUniqueId()
       const {args, flags} = await this.parse(Send)
-      this.log(`filepath: ${args.filepath} privatekey: ${flags.privatekey} stream: ${flags.stream}`)
+      this.log(`filepath: ${args.filepath} privatekey: ${flags.privatekey} stream: ${flags.stream} wait: ${flags.wait}`)
 
       const streamrCli = new StreamrClient({
+        logLevel: 'debug',
         auth: {
           privateKey: flags.privatekey,
         },
         network: {
-          webrtcMaxMessageSize: 128000, // 1000000// 1048576
+          webrtcMaxMessageSize: WEBRTC_MAX_MESSAGE_SIZE,
           webrtcSendBufferMaxMessageCount: 1000,
         },
       })
@@ -56,7 +58,7 @@ export default class Send extends Command {
       interface FileStats {
         started: number
       }
-      const bytesPerSlice = flags.bytesPerSlice ? 1024 * flags.bytesPerSlice : 1024 * BYTES_PER_SLICE
+      const bytesPerSlice = flags.bytesPerSlice ? 1024 * flags.bytesPerSlice : 1024 * KILOBYTES_PER_SLICE
       let waitTimeBetweenChunks = WAIT_TIME_BETWEEN_CHUNKS
       const fileStats: FileStats = {
         started: 0,
@@ -76,7 +78,7 @@ export default class Send extends Command {
         const payload = JSON.parse(JSON.stringify(base64Slice))
         const msg = {
           b: [
-            deviceId, payload, messageId, chunkCounter, totalSlices - 1, fileSizeStats.size, fileName, md5,
+            deviceId, payload, messageId, chunkCounter, totalSlices - 1, fileSizeStats.size, messageId + '_' + fileName, md5,
           ],
         }
         try {
@@ -89,7 +91,7 @@ export default class Send extends Command {
             fileStats.started = Date.now()
           } else {
             const timeLapsed = (Date.now() - fileStats.started) / 1000
-            const avgSpeed = Math.ceil(((chunkCounter + 1) * BYTES_PER_SLICE / ((Date.now() - fileStats.started) / 1000)))
+            const avgSpeed = Math.ceil(((chunkCounter + 1) * KILOBYTES_PER_SLICE / ((Date.now() - fileStats.started) / 1000)))
             simpleBar.update(chunkCounter + 1, {
               speed: avgSpeed + ' KB/s',
               time: timeLapsed + ' s',
@@ -99,7 +101,7 @@ export default class Send extends Command {
           // start sending slow, helps to signal that file transfer has started
           // change wait time once enough chunks have passed
           if (chunkCounter < 200) {
-            waitTimeBetweenChunks = 50
+            waitTimeBetweenChunks = 75
           } else {
             waitTimeBetweenChunks = flags.wait ? flags.wait : WAIT_TIME_BETWEEN_CHUNKS
           }

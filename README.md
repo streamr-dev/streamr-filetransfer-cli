@@ -26,68 +26,9 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`streamr-filetransfer-cli send FILE`](#streamr-filetransfer-cli-send-file)
-* [`streamr-filetransfer-cli receive`](#streamr-filetransfer-cli-receive)
 * [`streamr-filetransfer-cli help [COMMANDS]`](#streamr-filetransfer-cli-help-commands)
-
-## `streamr-filetransfer-cli send FILE`
-
-Send a file over Streamr network stream.
-
-```
-USAGE
-  $ streamr-filetransfer-cli send FILEPATH -k<0xPRIVATEKEY> -s<STREAM_ID>
-
-ARGUMENTS
-  FILEPATH  File to be sent
-
-FLAGS
-  -k<value>  (required) Private key that has access to given Stream
-  -s<value>  (required) Streamr stream where the file chunks are to be sent
-
-DESCRIPTION
-  Sends a file as chunks to Streamr stream.
-
-EXAMPLES
-  $ streamr-filetransfer-cli send ./crab_rave.mp4 -k0x1234... -s0x14Ee183938ef7b3b071072CfCAb16D2a0D37B39D/crab_party
-  filepath: .\crab_rave.mp4 privatekey: 0x1234... stream: 0x14Ee183938ef7b3b071072CfCAb16D2a0D37B39D/crab_party
-
-  md5 hash: bf8ae390020b3a02a19deac005ada113
-
-  # of slices 224
-  Upload | ████████████████████████████████████████ | 100% || 224/224 || 672 KB/s || 15.009 s
-  file read
-  upload_complete
-```
-
-_See code: [dist/commands/send/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.0/dist/commands/send/index.ts)_
-
-## `streamr-filetransfer-cli receive`
-
-Receive a file from Streamr network stream.
-
-```
-USAGE
-  $ streamr-filetransfer-cli receive -p<FOLDER> -k<0xPRIVATEKEY> -s<STREAM_ID>
-
-FLAGS
-  -p<value>  (required) Folder where file is to be saved
-  -k<value>  (required) Private key that has access to given Stream
-  -s<value>  (required) Streamr stream where the file chunks are to be sent
-
-DESCRIPTION
-  Receive file chunks from a Streamr stream and append them into a file.
-
-EXAMPLES
-  $ streamr-filetransfer-cli receive -pfiles -k0x1234... -s0x14Ee183938ef7b3b071072CfCAb16D2a0D37B39D/crab_party
-  Download | ████████████████████████████████████████ | 100% || 224/224 || 776 KB/s || 12.991 s
-  probably got all chunks
-  assuming chunks are in order
-  file saved at files/crab_rave.mp4
-  md5 hash: bf8ae390020b3a02a19deac005ada113
-
-  md5 hash match! File is OK
-```
+* [`streamr-filetransfer-cli receive [FILEPATH]`](#streamr-filetransfer-cli-receive-filepath)
+* [`streamr-filetransfer-cli send FILEPATH`](#streamr-filetransfer-cli-send-filepath)
 
 ## `streamr-filetransfer-cli help [COMMANDS]`
 
@@ -109,5 +50,56 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.9/src/commands/help.ts)_
 
+## `streamr-filetransfer-cli receive [FILEPATH]`
 
+Streamr file transfer
+
+```
+USAGE
+  $ streamr-filetransfer-cli receive [FILEPATH] -k <value> -s <value> -p <value> [-w <value>]
+
+ARGUMENTS
+  FILEPATH  Folder path
+
+FLAGS
+  -k, --privatekey=<value>  (required) Private key
+  -p, --filepath=<value>    (required) Folder path
+  -s, --stream=<value>      (required) Stream ID
+  -w, --wait=<value>        Wait time between receiving chunks in milliseconds
+
+DESCRIPTION
+  Streamr file transfer
+
+EXAMPLES
+  $ streamr-filetransfer-cli receive -p<FOLDER> -k<0xPRIVATEKEY> -s<STREAM_ID>
+```
+
+_See code: [dist/commands/receive/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.0/dist/commands/receive/index.ts)_
+
+## `streamr-filetransfer-cli send FILEPATH`
+
+Streamr file transfer
+
+```
+USAGE
+  $ streamr-filetransfer-cli send FILEPATH -k <value> -s <value> [-b <value>] [-w <value>]
+
+ARGUMENTS
+  FILEPATH  Filepath
+
+FLAGS
+  -b, --bytesPerSlice=<value>  Chunk size in KB
+  -k, --privatekey=<value>     (required) Private key
+  -s, --stream=<value>         (required) Stream ID
+  -w, --wait=<value>           Wait time between sending chunks in milliseconds
+
+DESCRIPTION
+  Streamr file transfer
+
+EXAMPLES
+  $ streamr-filetransfer-cli send <FILE_PATH> -k<0xPRIVATEKEY> -s<STREAM_ID>
+```
+
+_See code: [dist/commands/send/index.ts](https://github.com/yaruno/streamr-filetransfer-cli/blob/v0.0.0/dist/commands/send/index.ts)_
 <!-- commandsstop -->
+
