@@ -2,14 +2,14 @@
   "name": "streamr-filetransfer-cli",
   "version": "0.0.1",
   "description": "Streamr filetransfer CLI",
-  "author": "Jarno @yaruno",
+  "author": "Streamr",
   "bin": {
     "streamr-filetransfer-cli": "./bin/run"
   },
-  "homepage": "https://github.com/yaruno/streamr-filetransfer-cli",
+  "homepage": "https://github.com/streamr-dev/streamr-filetransfer-cli",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": "yaruno/streamr-filetransfer-cli",
+  "repository": "streamr-dev/streamr-filetransfer-cli",
   "files": [
     "/bin",
     "/dist",
@@ -72,8 +72,11 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "bugs": "https://github.com/yaruno/streamr-filetransfer-cli/issues",
+  "bugs": "https://github.com/streamr-dev/streamr-filetransfer-cli/issues",
   "keywords": [
+    "streamr",
+    "file transfer",
+    "cli",
     "oclif"
   ],
   "types": "dist/index.d.ts"
