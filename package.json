@@ -20,7 +20,9 @@
     "@oclif/core": "^2",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.4.7",
+    "@types/once": "^1.4.0",
     "cli-progress": "^3.12.0",
+    "fs-tail-stream": "^1.1.0",
     "streamr-client": "^8.5.2"
   },
   "devDependencies": {

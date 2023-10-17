@@ -4,6 +4,7 @@ import {StreamrClient} from 'streamr-client'
 import * as fs from 'node:fs'
 import path from 'node:path'
 import {calculateFileMD5, arrayBufferToBase64, generateUniqueId, waitAWhile} from '../../utils/utils'
+import createContinuousReadStream from '../../utils/create-continuous-read-stream.cjs'
 
 const WAIT_TIME_BETWEEN_CHUNKS = 40
 const KILOBYTES_PER_SLICE = 300 // 560
@@ -26,6 +27,7 @@ export default class Send extends Command {
       stream: Flags.string({char: 's', description: 'Stream ID', required: true}),
       bytesPerSlice: Flags.integer({char: 'b', description: 'Chunk size in KB', required: false}),
       wait: Flags.integer({char: 'w', description: 'Wait time between sending chunks in milliseconds', required: false}),
+      continuous: Flags.boolean({char: 'c', description: 'Continuous reading of the file', required: false, default: false}),
     }
 
     static args = {
@@ -36,7 +38,7 @@ export default class Send extends Command {
       const deviceId = generateUniqueId()
       const messageId = generateUniqueId()
       const {args, flags} = await this.parse(Send)
-      this.log(`filepath: ${args.filepath} privatekey: ${flags.privatekey} stream: ${flags.stream} wait: ${flags.wait}`)
+      this.log(`filepath: ${args.filepath} privatekey: ${flags.privatekey} stream: ${flags.stream} wait: ${flags.wait} continuous ${flags.continuous}`)
 
       const streamrCli = new StreamrClient({
         auth: {
@@ -66,7 +68,7 @@ export default class Send extends Command {
       const fileName = path.basename(args.filepath)
       const md5 = await calculateFileMD5(args.filepath)
       console.log('\nmd5 hash: ' + md5 + '\n')
-      const readStream = fs.createReadStream(args.filepath, {highWaterMark: bytesPerSlice})
+      const readStream = flags.continuous ? createContinuousReadStream.createReadStream(args.filepath, {tail: true}) : fs.createReadStream(args.filepath, {highWaterMark: bytesPerSlice})
       const fileSizeStats = await fs.promises.stat(args.filepath)
       let chunkCounter = -1 // used as 'array' index
       const totalSlices = Math.ceil(fileSizeStats.size / (bytesPerSlice))
@@ -83,7 +85,8 @@ export default class Send extends Command {
         try {
           readStream.pause()
           if (chunkCounter === 0) {
-            simpleBar.start(totalSlices, 0, {
+            const totSlices = flags.continuous ? -1 : totalSlices
+            simpleBar.start(totSlices, 0, {
               speed: 'N/A',
               time: '0',
             })
@@ -97,18 +100,12 @@ export default class Send extends Command {
             })
           }
 
-          // start sending slow, helps to signal that file transfer has started
-          // change wait time once enough chunks have passed
-          if (chunkCounter < 200) {
-            waitTimeBetweenChunks = 75
-          } else {
-            waitTimeBetweenChunks = flags.wait ? flags.wait : WAIT_TIME_BETWEEN_CHUNKS
-          }
+          waitTimeBetweenChunks = flags.wait ? flags.wait : WAIT_TIME_BETWEEN_CHUNKS
 
           await streamrCli.publish(flags.stream, msg)
           await waitAWhile(waitTimeBetweenChunks)
           // if everything is send we can exit
-          if (chunkCounter === (totalSlices - 1)) {
+          if (flags.continuous === false && chunkCounter === (totalSlices - 1)) {
             await waitAWhile(600)
             // eslint-disable-next-line no-process-exit, unicorn/no-process-exit
             process.exit()
@@ -120,6 +117,10 @@ export default class Send extends Command {
           readStream.resume()
         }
       })
+      readStream.on('change', () => {
+        console.log('filesize has changed')
+      })
+
       readStream.on('error', error => {
         console.error('Something went wrong', error)
       })
